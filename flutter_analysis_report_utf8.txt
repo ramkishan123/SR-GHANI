@@ -1,0 +1,38 @@
+﻿Analyzing Sr managment...                                       
+
+warning - Unused import: 'package:sr_ghani/features/dashboard/presentation/pages/add_customer_screen.dart' - lib\features\dashboard\presentation\pages\dashboard_screen.dart:6:8 - unused_import
+   info - The import of 'package:flutter/services.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\features\dashboard\presentation\pages\settings_screen.dart:2:8 - unnecessary_import
+warning - Unused import: 'package:sr_ghani/services/storage_service.dart' - lib\features\dashboard\presentation\pages\settings_screen.dart:13:8 - unused_import
+warning - Unused import: 'package:sr_ghani/services/settings_repository.dart' - lib\features\dashboard\presentation\pages\settings_screen.dart:15:8 - unused_import
+   info - Don't use 'BuildContext's across async gaps - lib\features\dashboard\presentation\pages\settings_screen.dart:270:26 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\features\dashboard\presentation\pages\settings_screen.dart:292:38 - use_build_context_synchronously
+   info - Statements in a for should be enclosed in a block - lib\features\dashboard\presentation\pages\settings_screen.dart:317:38 - curly_braces_in_flow_control_structures
+   info - Statements in a for should be enclosed in a block - lib\features\dashboard\presentation\pages\settings_screen.dart:320:45 - curly_braces_in_flow_control_structures
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:104:13 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:104:19 - deprecated_member_use
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:139:15 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:139:21 - deprecated_member_use
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:153:15 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:153:21 - deprecated_member_use
+warning - The value of the local variable 'bytes' isn't used - lib\services\export_service.dart:179:11 - unused_local_variable
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:187:13 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:187:19 - deprecated_member_use
+   info - The type of the right operand ('ConnectivityResult') isn't a subtype or a supertype of the left operand ('List<ConnectivityResult>') - lib\services\sync_service.dart:70:18 - unrelated_type_equality_checks
+   info - The type of the right operand ('ConnectivityResult') isn't a subtype or a supertype of the left operand ('List<ConnectivityResult>') - lib\services\sync_service.dart:164:19 - unrelated_type_equality_checks
+
+flutter : 19 issues found. 
+(ran in 108.4s)
+At line:1 char:1
++ flutter analyze > 
+flutter_analysis_report.txt 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          
+: NotSpecified: (19 issues 
+found. (r    an in 
+108.4s):String) [], 
+RemoteException
+    + FullyQualifiedErrorId 
+: NativeCommandError
+ 

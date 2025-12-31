@@ -1,0 +1,19 @@
+﻿Analyzing Sr managment...                                       
+
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:104:13 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:104:19 - deprecated_member_use
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:139:15 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:139:21 - deprecated_member_use
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:153:15 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:153:21 - deprecated_member_use
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:186:13 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:186:19 - deprecated_member_use
+
+flutter : 8 issues found. (ran in 4.1s)
+At line:1 char:1
++ flutter analyze > flutter_analysis_report_final_v2.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (8 issues found. (ra 
+   n in 4.1s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

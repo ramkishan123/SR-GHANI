@@ -1,0 +1,18 @@
+﻿Analyzing Sr managment...                                       
+
+   info - Don't use 'BuildContext's across async gaps - lib\features\dashboard\presentation\pages\settings_screen.dart:291:38 - use_build_context_synchronously
+  error - Undefined name 'docs' - lib\features\dashboard\presentation\pages\settings_screen.dart:315:27 - undefined_identifier
+  error - The method 'shareXFiles' isn't defined for the type 'SharePlus' - lib\services\export_service.dart:104:23 - undefined_method
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\services\export_service.dart:139:15 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\services\export_service.dart:139:21 - deprecated_member_use
+  error - The method 'shareXFiles' isn't defined for the type 'SharePlus' - lib\services\export_service.dart:153:25 - undefined_method
+  error - The method 'shareXFiles' isn't defined for the type 'SharePlus' - lib\services\export_service.dart:186:23 - undefined_method
+
+flutter : 7 issues found. (ran in 4.3s)
+At line:1 char:1
++ flutter analyze > flutter_analysis_report_final.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (7 issues found. (ra 
+   n in 4.3s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

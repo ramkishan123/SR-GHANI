@@ -1,0 +1,594 @@
+# Ghani Oil Management App - Complete Development Specification
+
+## Project Overview
+Create a comprehensive customer management application for a traditional ghani (oil press) business using **Flutter**. The app must support **Android, iOS, Windows** with **web debugging capabilities**.
+
+---
+
+## Platform Requirements
+- **Primary Platforms**: Android, iOS, Windows (Desktop EXE)
+- **Debug Platform**: Web (for testing purposes only)
+- **UI/UX**: Premium, modern design with fully responsive layouts optimized for mobile, tablet, and desktop screens
+- **Offline Support**: Full offline functionality with automatic sync when network is restored
+
+---
+
+## Database Requirements
+**DO NOT USE ISAR DATABASE**
+
+Instead, use one of these cross-platform alternatives:
+- **Recommended Option 1**: **Hive** (lightweight, fast, works on Android, iOS, Windows, and Web)
+- **Recommended Option 2**: **Drift (formerly Moor)** (SQL-based, cross-platform support)
+- **Recommended Option 3**: **SQLite with sqflite_common_ffi** (for desktop) + **sqflite** (for mobile)
+
+**Important**: Ensure the chosen database solution has full compatibility with web debugging and doesn't cause compilation issues on web platform.
+
+---
+
+## Authentication System
+
+### Registration & Login
+- **Authentication Method**: Email and Password ONLY
+- **No Social Logins**: No Google, Facebook, or other third-party authentication
+- **Pages Required**:
+  - Registration page with email and password fields
+  - Login page with email and password fields
+  - Logout functionality accessible from settings/profile menu
+- **Firebase Integration**: Use Firebase Authentication for user management
+- **Session Management**: Keep users logged in until they manually logout
+
+### First-Time User Experience
+- **Onboarding Screen**: Show app introduction and feature overview on first launch only
+- Never show onboarding after user has registered or logged in
+
+---
+
+## Customer Management Features
+
+### Add Customer Form
+**Required Fields**:
+- Customer Name (Required, text input)
+- Date and Time (Auto-populated with current date/time, editable)
+
+**Optional Fields**:
+- Mobile Number (Optional, numeric input)
+  - Always prefixed with Indian country code: **+91**
+  - Format: +91 XXXXXXXXXX
+- Address (Optional, text area input)
+
+### Seed Management (Multi-Entry System)
+
+**Default Seed Options**:
+1. Til (Sesame)
+2. Mungfali (Peanut)
+3. Black Sarso (Black Mustard)
+4. Yellow Sarso (Yellow Mustard)
+5. Coconut
+
+**Features**:
+- Users can add custom seed types beyond the default list
+- Each customer can have multiple seed entries (same or different seeds)
+- Example: Customer A can have:
+  - Til: 20 kg
+  - Til: 15 kg (separate entry)
+  - Mungfali: 30 kg
+- Each seed entry should include:
+  - Seed type (dropdown with defaults + custom options)
+  - Weight/Quantity (in kg)
+  - Individual status tracking
+
+### Status Workflow
+
+**Three Status Levels**:
+
+1. **Pending**: Initial status when customer is added
+2. **Completed by Us**: When ghani processing is finished
+   - Mark entire customer order or individual seed entries as completed
+3. **Fully Completed**: When customer collects their oil/khali
+
+### Payment Collection System
+
+When marking order as **Fully Completed**, user must select payment method:
+
+**Payment Options**:
+1. **UPI** - Digital payment
+2. **Cash** - Cash payment
+3. **Khali** (Oil cake leftover after extraction)
+   - If Khali is selected, trigger conditional logic:
+     - **For Mungfali (Peanut)**: Show input field "Extra charge: ₹5 or custom amount"
+     - **For Til (Sesame)**: Only accept Khali as payment (no extra charge)
+     - **For Mixed Orders (Khali + Oil taken by customer)**: Charge ₹20 per kg
+
+**Payment Tracking**:
+- Store payment method with timestamp
+- Allow viewing payment history per customer
+- Calculate total revenue by payment method
+
+---
+
+## Customer Editing & Management
+
+### Edit Capabilities
+Users can edit ANY customer data after creation:
+- Change customer name
+- Update mobile number
+- Modify address
+- Edit date and time of order
+- Add, edit, or remove seed entries
+- Change quantities
+- Update status
+- Modify payment details
+
+### Delete Capabilities
+- **Delete Individual Seed Entry**: Remove specific seed from a customer's order
+- **Delete Entire Customer**: Remove customer and all associated data
+- **Firebase Sync**: All deletions must be synced to Firebase and propagated to all devices
+
+### Search Functionality
+- **Search by Name**: Real-time search as user types
+- **Auto-complete suggestions**: Show matching customers while typing
+- **Case-insensitive search**: "ram" should find "Ram", "RAM", "ram"
+
+### Filter System
+
+**Pre-defined Filters**:
+- Today's customers
+- This week's customers
+- This month's customers
+- Custom date range (Start Date to End Date picker)
+
+**Status Filters**:
+- All customers
+- Pending orders
+- Completed by Us
+- Fully Completed
+
+**Combined Filters**: Allow date range + status filtering simultaneously
+
+---
+
+## Analytics Dashboard
+
+### Display Metrics:
+- **Total Customers**: Overall count
+- **Pending Orders**: Count and list
+- **Completed by Us**: Count and list
+- **Fully Completed**: Count and list
+- **Today's Additions**: Count of customers added today
+- **Revenue Summary**: Total by payment method (UPI, Cash, Khali calculations)
+
+### Visual Representation:
+- Use charts/graphs (pie chart, bar chart) for status distribution
+- Revenue trends over time
+- Most common seed types processed
+
+---
+
+## Mobile Number Call Functionality
+
+### Android Behavior:
+- **Call Button**: Display "Call" button next to mobile number
+- **On Click**: 
+  - **Option 1** (Preferred): Open default dialer with number pre-filled (use `url_launcher` package)
+  - **Option 2**: Direct call without dialer if permission granted
+  - Copy number to clipboard automatically
+
+### iOS Behavior:
+- **Call Button**: Display "Call" button
+- **On Click**: 
+  - Copy mobile number to clipboard
+  - Show confirmation snackbar: "Mobile number copied: +91XXXXXXXXXX"
+  - Optionally open dialer with number (iOS has restrictions)
+
+### Windows/Desktop Behavior:
+- **Call Button**: Display "Copy Number" button
+- **On Click**: 
+  - Copy mobile number to clipboard
+  - Show confirmation message: "Mobile number copied"
+
+**Implementation Note**: Use `url_launcher` for tel: links and `clipboard` package for copying
+
+---
+
+## Firebase Integration & Real-Time Sync
+
+### Firebase Services Required:
+1. **Firebase Authentication**: For user login/logout
+2. **Cloud Firestore**: For real-time data synchronization
+3. **Firebase Storage**: If needed for any file uploads (PDFs, images)
+
+### Data Structure (Firestore):
+```
+users/
+  └── {userId}/
+      └── customers/
+          └── {customerId}/
+              ├── name: String
+              ├── mobileNumber: String (optional)
+              ├── address: String (optional)
+              ├── dateTime: Timestamp
+              ├── status: String (pending/completed_by_us/fully_completed)
+              ├── paymentMethod: String (optional)
+              ├── createdAt: Timestamp
+              ├── updatedAt: Timestamp
+              └── seeds/
+                  └── {seedId}/
+                      ├── seedType: String
+                      ├── quantity: Number (kg)
+                      ├── status: String
+                      └── createdAt: Timestamp
+```
+
+### Real-Time Sync Behavior:
+- **Add Customer**: Instantly sync to Firestore → all devices update in real-time
+- **Edit Customer**: Any edit propagates to all logged-in devices immediately
+- **Delete Customer/Seed**: Deletion reflects across all platforms instantly
+- **Offline Mode**: 
+  - Queue all add/edit/delete operations locally
+  - Use Firestore offline persistence
+  - Auto-sync when internet connection is restored
+  - Show sync status indicator (synced/syncing/offline)
+
+### Conflict Resolution:
+- Use Firestore's last-write-wins strategy
+- Optionally implement timestamp-based conflict resolution
+
+---
+
+## Export Functionality (PDF & Excel)
+
+### Export Requirements:
+- **Formats**: High-quality PDF and Excel (XLSX)
+- **Quality**: Print-ready, professional formatting
+- **Content**: All customer data with applied filters
+
+### PDF Export Features:
+- Company header/logo (optional)
+- Customer list with all details
+- Seed entries per customer
+- Payment information
+- Status indicators
+- Date range of export
+- Total summary (customer count, revenue)
+
+**Recommended Packages**:
+- `pdf` package for PDF generation
+- `printing` package for preview and printing
+
+### Excel Export Features:
+- Multiple sheets: Customers, Analytics, Payment Summary
+- Formatted cells with headers
+- Auto-fit column widths
+- Filters enabled
+- Color-coded status (Green: Completed, Yellow: In Progress, Red: Pending)
+
+**Recommended Packages**:
+- `excel` package for XLSX generation
+- `path_provider` for saving files
+
+### Export Triggers:
+- Export all data
+- Export filtered data (today, this week, custom range)
+- Export by status
+- Export specific customer history
+
+---
+
+## Advanced Settings Section
+
+### 1. Mobile Number Scraper
+**Purpose**: Extract all customer mobile numbers to prevent forgetting anyone
+
+**Options**:
+- **Download Raw Numbers**: Plain text file with numbers only
+  - Format: One number per line (+91XXXXXXXXXX)
+  - File name: `customer_numbers_YYYY-MM-DD.txt`
+
+- **Download Numbers with Names**: Formatted list
+  - Format: "Customer Name - +91XXXXXXXXXX"
+  - File name: `customer_contacts_YYYY-MM-DD.txt`
+
+**Export Options**:
+- Download as TXT file
+- Copy all to clipboard
+- Share via platform share dialog
+
+**Implementation**:
+- Filter out customers without mobile numbers
+- Remove duplicates if same number exists multiple times
+- Sort alphabetically or by date added
+
+### 2. Factory Reset / Data Wipe
+**Purpose**: Complete data reset for logged-in user only
+
+**Confirmation Flow**:
+1. User clicks "Factory Reset" in Advanced Settings
+2. Show warning dialog:
+   - "⚠️ WARNING: This will permanently delete all your customer data, seeds, and payment records. This action cannot be undone."
+   - "Type 'DELETE' to confirm"
+3. Require text confirmation input
+4. Show final confirmation: "Are you absolutely sure?"
+5. On confirm:
+   - Delete all Firestore data under user's collection
+   - Clear local database
+   - Show progress indicator
+   - Logout user automatically
+   - Return to login screen
+
+**What Gets Deleted**:
+- All customers and their data
+- All seed entries
+- All payment records
+- Custom seed types added by user
+- Local cache and offline data
+
+**What Remains**:
+- User authentication credentials (can still login)
+- App settings/preferences (if any)
+
+**Safety Features**:
+- Require re-authentication before allowing factory reset
+- Send confirmation email after reset
+- Option to export data before reset
+
+---
+
+## UI/UX Specifications
+
+### Design Guidelines:
+- **Theme**: Modern, clean, professional
+- **Color Scheme**: Premium look with primary brand color
+- **Typography**: Clear, readable fonts (e.g., Roboto, Inter, SF Pro)
+- **Spacing**: Adequate padding and margins for touch targets
+- **Animations**: Smooth transitions and micro-interactions
+- **Loading States**: Shimmer effects or progress indicators
+
+### Responsive Layouts:
+
+**Mobile (Portrait)**:
+- Single column layout
+- Bottom navigation or drawer menu
+- Floating action button for "Add Customer"
+- Swipeable cards for customer list
+
+**Tablet (Portrait & Landscape)**:
+- Two-column layout where appropriate
+- Sidebar navigation
+- Master-detail view for customer list
+
+**Desktop (Windows)**:
+- Multi-column layout
+- Persistent sidebar navigation
+- Table view with sortable columns
+- Keyboard shortcuts for common actions
+
+### Key Screens:
+
+1. **Login/Register Screen**
+   - Centered form
+   - Input validation
+   - Password visibility toggle
+   - "Forgot Password" link
+
+2. **Dashboard/Home Screen**
+   - Analytics cards at top
+   - Customer list below
+   - Search bar prominent
+   - Filter chips/buttons
+   - FAB for adding customer
+
+3. **Add/Edit Customer Screen**
+   - Step-by-step or single page form
+   - Dynamic seed entry section (add/remove)
+   - Date/time picker
+   - Save and cancel buttons
+
+4. **Customer Detail Screen**
+   - Customer info card
+   - Seed entries list (editable)
+   - Status timeline
+   - Action buttons (Call, Edit, Delete, Mark Complete)
+
+5. **Settings Screen**
+   - User profile section
+   - Advanced settings expandable
+   - Export options
+   - Logout button
+
+---
+
+## Additional Technical Specifications
+
+### State Management:
+- **Recommended**: Provider, Riverpod, or Bloc pattern
+- Separate business logic from UI
+- Handle loading, success, error states
+
+### Form Validation:
+- Email format validation
+- Password strength requirements (min 8 chars, 1 uppercase, 1 number)
+- Mobile number format (10 digits after +91)
+- Required field checks
+- Real-time validation feedback
+
+### Error Handling:
+- Network errors: Show retry option
+- Firebase errors: User-friendly messages
+- Validation errors: Inline field errors
+- Sync failures: Queue and retry mechanism
+
+### Permissions Required:
+- **Android**: 
+  - INTERNET
+  - CALL_PHONE (optional, for direct calling)
+  - WRITE_EXTERNAL_STORAGE (for exports on older Android)
+- **iOS**: 
+  - NSPhoneCallUsageDescription (Info.plist)
+- **Windows**: 
+  - Network access
+
+### Testing Requirements:
+- **Unit Tests**: Business logic and data models
+- **Widget Tests**: UI components
+- **Integration Tests**: Firebase operations, offline sync
+- **Platform Testing**: Test on actual devices for Android, iOS, Windows
+- **Web Debugging**: Ensure no runtime errors on web build
+
+### Performance Optimization:
+- Lazy loading for customer lists (pagination)
+- Image optimization if any images used
+- Efficient Firestore queries (indexed fields)
+- Debounce search input
+- Cache frequently accessed data
+
+---
+
+## Development Checklist
+
+### Phase 1: Setup & Authentication
+- [ ] Initialize Flutter project with platform support
+- [ ] Setup Firebase for Android, iOS, Windows, Web
+- [ ] Implement database solution (Hive/Drift)
+- [ ] Create registration page
+- [ ] Create login page
+- [ ] Implement logout functionality
+- [ ] Setup first-time onboarding screen
+
+### Phase 2: Core Features
+- [ ] Create customer data model
+- [ ] Build add customer form with seed entries
+- [ ] Implement customer list view
+- [ ] Create customer detail page
+- [ ] Add edit customer functionality
+- [ ] Implement delete operations
+- [ ] Setup status workflow (Pending → Completed by Us → Fully Completed)
+
+### Phase 3: Advanced Features
+- [ ] Implement search functionality
+- [ ] Build filter system (date ranges, status)
+- [ ] Create analytics dashboard
+- [ ] Add payment method selection with conditional logic
+- [ ] Implement call/copy mobile number feature
+- [ ] Build export to PDF functionality
+- [ ] Build export to Excel functionality
+
+### Phase 4: Firebase Integration
+- [ ] Setup Firestore data structure
+- [ ] Implement real-time listeners
+- [ ] Add offline persistence
+- [ ] Create sync queue for offline operations
+- [ ] Test cross-device synchronization
+
+### Phase 5: Advanced Settings
+- [ ] Build mobile number scraper
+- [ ] Implement factory reset with confirmations
+- [ ] Add data export before reset option
+
+### Phase 6: UI Polish
+- [ ] Design responsive layouts for all screens
+- [ ] Implement premium theme
+- [ ] Add animations and transitions
+- [ ] Create loading states
+- [ ] Design empty states
+- [ ] Add error state UI
+
+### Phase 7: Testing & Deployment
+- [ ] Test on Android devices
+- [ ] Test on iOS devices
+- [ ] Test on Windows desktop
+- [ ] Debug on web platform
+- [ ] Fix platform-specific issues
+- [ ] Optimize performance
+- [ ] Prepare for deployment
+
+---
+
+## Packages to Consider
+
+### Essential:
+- `firebase_core`: Firebase initialization
+- `firebase_auth`: Authentication
+- `cloud_firestore`: Database
+- `hive` / `hive_flutter`: Local database (or alternative)
+- `provider` / `riverpod`: State management
+- `url_launcher`: Phone calls and URLs
+- `clipboard`: Copy to clipboard
+- `intl`: Date formatting
+- `path_provider`: File paths
+
+### Export & Files:
+- `pdf`: PDF generation
+- `printing`: PDF preview
+- `excel`: Excel generation
+- `share_plus`: Share files
+- `file_picker`: File selection
+
+### UI/UX:
+- `google_fonts`: Custom fonts
+- `fl_chart`: Charts and graphs
+- `animations`: Advanced animations
+- `flutter_slidable`: Swipeable list items
+- `shimmer`: Loading effects
+
+### Utilities:
+- `connectivity_plus`: Network status
+- `shared_preferences`: Simple data storage
+- `uuid`: Generate unique IDs
+- `logger`: Debugging
+
+---
+
+## Final Notes
+
+1. **Web Debugging**: Ensure the chosen database and all packages have web support for debugging purposes, even though web is not a target platform for production
+
+2. **Offline First**: Design the app to work offline first, with sync as a background operation
+
+3. **User Experience**: Focus on smooth, intuitive workflows for daily operations (adding customers, marking complete)
+
+4. **Data Integrity**: Implement proper error handling and data validation to prevent corruption
+
+5. **Scalability**: Design database structure to handle hundreds or thousands of customers efficiently
+
+6. **Security**: Implement proper Firestore security rules to protect user data
+
+7. **Backup**: Consider implementing automatic backup reminders or cloud backup options
+
+8. **Documentation**: Provide in-app help or tooltips for first-time users
+
+---
+
+## Firestore Security Rules Example
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+This ensures users can only access their own data.
+
+---
+
+## Success Criteria
+
+The app is considered complete when:
+- ✅ All CRUD operations work flawlessly on all platforms
+- ✅ Real-time sync works across Android, iOS, and Windows
+- ✅ Offline mode functions properly with automatic sync
+- ✅ Export to PDF and Excel generates high-quality files
+- ✅ Search and filters return accurate results
+- ✅ Payment logic correctly handles all seed types
+- ✅ Factory reset fully clears user data
+- ✅ UI is responsive and premium-looking on all screen sizes
+- ✅ No crashes or major bugs on any platform
+- ✅ Web debugging builds without errors
+
+---
+
+**Good luck with your Ghani Oil Management App development!** 🌟
